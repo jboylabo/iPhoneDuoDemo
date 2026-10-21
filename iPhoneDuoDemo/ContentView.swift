@@ -1,21 +1,33 @@
-//
-//  ContentView.swift
-//  iPhoneDuoDemo
-//
-//  Created by 橋本純一 on 2026/10/20.
-//
-
 import SwiftUI
 
 struct ContentView: View {
+    @State private var hinge: DeviceHinge?
+
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            if let hinge {
+                switch hinge.status {
+                case .closed:
+                    Text("Closed")
+                case .fullyOpen:
+                    Text("Fully Open")
+                case .partiallyOpen:
+                    Text("Partially Open")
+                default:
+                    Text("Unknown")
+                }
+
+                Text("Angle: \(hinge.angle.degrees, specifier: "%.1f")°")
+//            } else {
+//                ContentUnavailableView(
+//                    "Hinge Unavailable",
+//                    systemImage: "rectangle.split.2x1"
+//                )
+            }
         }
-        .padding()
+        .onHingeChange { oldContext, newContext in
+            hinge = newContext.hinge
+        }
     }
 }
 
